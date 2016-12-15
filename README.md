@@ -5,10 +5,10 @@ This is an amazon alexa skill, to get values from your netatmo wetterstation.
 Ask Alexa:
 <br /><br />
 Alexa, frage die Wetterstation, wie hoch der CO2-Wert im Wohnzimmer ist.<br />
-> Der CO2 Wert im Wohnzimmer beträgt 623 ppm.
+<i>Der CO2 Wert im Wohnzimmer beträgt 623 ppm.</i>
 <br /><br />
 Alexa, frage die Wetterstation, wie viel Grad es Aussen hat.<br />
-> Aussen hat es 4,6 Grad.
+<i>Aussen hat es 4,6 Grad.</i>
 
 # HowTo Setup
 1. Sign in in netatmo.
@@ -27,4 +27,4 @@ Alexa, frage die Wetterstation, wie viel Grad es Aussen hat.<br />
 14. Finished
 
 # Thanks To
-http://stackoverflow.com/questions/33859826/linking-netatmo-weather-station-to-amazon-echo-alexa
+Dr. Mihai GALOS - http://stackoverflow.com/questions/33859826/linking-netatmo-weather-station-to-amazon-echo-alexa

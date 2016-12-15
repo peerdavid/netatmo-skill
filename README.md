@@ -1,7 +1,7 @@
-# Amazon Alexa <-> Netatmo Wetter Station
+# Alexa skill for Netatmo weather stations
 
-This is a german amazon alexa skill, to get values from your netatmo wetterstation.
-<br /><b>This is not the official version. Currently (12/2016) there exists no official skill for the netatmo wetterstation.</b>
+This is a german amazon alexa skill, to get values from your netatmo weather stations.
+<br /><b>This is not the official version. Currently (12/2016) there exists no official skill for netatmo weather stations.</b>
 
 ## HowTo use
 Ask Alexa:
@@ -14,7 +14,7 @@ Alexa, frage Wetterstation Zeus, wie viel Grad es Aussen hat.<br />
 
 ## HowTo Setup
 1. Sign in in netatmo.
-2. Name your wetterstation modules and devices like the names written in SlotType.txt (or add some names to SlotType.txt)
+2. Name your weather station modules and devices like the lines in SlotType.txt (or add some names to SlotType.txt)
 3. Register as a developer on netatmo.
 4. Create a new app
 5. Copy the client id and the client secret.

@@ -1,0 +1,14 @@
+NAME = LIST_OF_LOCATIONS 
+------------------------
+Aussen
+Wohnzimmer
+Küche
+Keller
+Wintergarten Oben
+Wintergarten Unten
+Büro
+Waschraum
+Bad
+Zimmer von Anna
+Zimmer von David
+Schlafzimmer

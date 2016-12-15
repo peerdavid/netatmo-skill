@@ -1,0 +1,59 @@
+    {
+"intents": 
+    [
+        {
+            "intent": "ALL",
+            "slots": [
+              {
+                "name": "Location",
+                "type": "LIST_OF_LOCATIONS"
+              }
+            ]
+        },
+        {
+            "intent": "Temperature",
+            "slots": [
+              {
+                "name": "Location",
+                "type": "LIST_OF_LOCATIONS"
+              }
+            ]
+        },
+        {
+            "intent": "Humidity",
+            "slots": [
+              {
+                "name": "Location",
+                "type": "LIST_OF_LOCATIONS"
+              }
+            ]
+        },
+      	{
+            "intent": "COZWEI",
+            "slots": [
+              {
+                "name": "Location",
+                "type": "LIST_OF_LOCATIONS"
+              }
+            ]
+        },
+        {
+            "intent": "Noise",
+            "slots": [
+              {
+                "name": "Location",
+                "type": "LIST_OF_LOCATIONS"
+              }
+            ]
+        },
+        {
+            "intent": "Pressure",
+            "slots": [
+              {
+                "name": "Location",
+                "type": "LIST_OF_LOCATIONS"
+              }
+            ]
+        }
+    ]
+}

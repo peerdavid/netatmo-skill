@@ -1,0 +1,24 @@
+ALL wie die Werten im {Location} sind
+ALL nach den Werten im {Location}
+ALL die Messwerte im {Location} sind
+ALL nach den Messwerten im {Location}
+
+Temperature wie viel Grad es im {Location} hat
+Temperature wie die Temperatur im {Location} ist
+Temperature wie hoch die Temperatur im {Location} ist
+Temperature nach der Temperatur im {Location}
+
+COZWEI wie der CO zwei Wert im {Location} ist
+COZWEI nach dem CO zwei Wert im {Location}
+COZWEI nach dem p p m Wert im {Location}
+
+Humidity wie hoch die Luftfeuchtigkeit im {Location} ist
+Humidity wie die Luftfeuchtigkeit im {Location} ist
+Humidity nach der Luftfeuchtigkeit im {Location}
+
+Noise wie laut es im {Location} ist
+Noise nach der Lautstärke im {Location}
+
+Pressure wie hoch der Luftdruck im {Location} ist
+Pressure wie der Luftdruck im {Location} ist
+Pressure nach dem Luftdruck im {Location}

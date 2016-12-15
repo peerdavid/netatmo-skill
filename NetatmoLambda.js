@@ -232,7 +232,7 @@ function handleNetatmoResponse(parsedResponse, callback, intentName, intentSlots
 
     // Output value for one single sensor
     sensorName = convertIntentToSensorName(intentName);
-    if(!currentDevice[sensorName]){
+    if(currentDevice[sensorName] == null){
         response(callback, "Die Station " + im + locationName + " hat diesen Sensor nicht eingebaut.");
         return;
     }

@@ -1,16 +1,17 @@
 /*
  * Connect Netatmo Wetterstation and Amazon Alexa
  * 
- * To configure the lambda service, set the environment variables:
+ * Set the following environment variables in your lambda service:
  *  CLIENT_ID
  *  CLIENT_SECRET
  *  USER_ID
  *  PASSWORD
+ * 
+ * See Also:
+ * https://github.com/peerdavid/netatmo-alexa
+ * http://stackoverflow.com/questions/33859826/linking-netatmo-weather-station-to-amazon-echo-alexa
  */
 
-/*
- * Includes
- */
 var http = require('https'); 
 var https = require('https');
 var querystring = require('querystring');
@@ -62,7 +63,7 @@ function onLaunch(launchRequest, session, callback) {
             ", sessionId=" + session.sessionId);
 
     // Dispatch to your skill's launch.
-    getDataFromNetatmo(callback);
+    getTokenFromNetatmo(callback);
 }
 
 
@@ -78,7 +79,7 @@ function onIntent(intentRequest, session, callback) {
         intentSlots = intentRequest.intent.slots;
     }
 
-    getDataFromNetatmo(callback,intentName, intentSlots);
+    getTokenFromNetatmo(callback, intentName, intentSlots);
 }
 
 
@@ -88,10 +89,10 @@ function onSessionEnded(sessionEndedRequest, session) {
 }
 
 
-function getDataFromNetatmo(callback, intentName, intentSlots){
+function getTokenFromNetatmo(callback, intentName, intentSlots){
     console.log("sending request to netatmo...")
 
-    var payload = querystring.stringify({
+    var content = querystring.stringify({
         'grant_type'    : 'password',
         'client_id'     : process.env.CLIENT_ID,
         'client_secret' : process.env.CLIENT_SECRET,
@@ -106,52 +107,17 @@ function getDataFromNetatmo(callback, intentName, intentSlots){
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': Buffer.byteLength(payload)
+            'Content-Length': Buffer.byteLength(content)
         }
 
     };
 
-    // Get token and set callbackmethod to get measure 
-    doCall(payload, options, onReceivedTokenResponse, callback, intentName, intentSlots);
-}
-
-
-function doCall(payload, options, onResponse,
-                callback, intentName, intentSlots){
-
-    var req = https.request(options, function(res) {
-        console.log("statusCode: ", res.statusCode);
-        console.log("headers: ", res.headers);
-
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
-            console.log("body: " + chunk);
-            var parsedResponse = JSON.parse(chunk);
-            if (typeof onResponse !== 'undefined') {
-                onResponse(parsedResponse, callback, intentName, intentSlots);
-            }
-
-        });
-
-        res.on('error', function (chunk) {
-            console.log('Error: '+chunk);
-        });
-
-        res.on('end', function() {
-            //callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
-        });
-    });
-
-    req.on('error', function(e){
-        console.log('error: '+e)
-    });
-    req.write(payload);
-    req.end();
+    request(content, options, onReceivedTokenResponse, callback, intentName, intentSlots);
 }
 
 
 function onReceivedTokenResponse(parsedResponse, callback, intentName, intentSlots){
-    var payload = querystring.stringify({
+    var content = querystring.stringify({
         'access_token'  : parsedResponse.access_token
     });
 
@@ -161,12 +127,40 @@ function onReceivedTokenResponse(parsedResponse, callback, intentName, intentSlo
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': Buffer.byteLength(payload)
+            'Content-Length': Buffer.byteLength(content)
         }
-
     };
 
-    doCall(payload, options, getMeasure, callback, intentName, intentSlots);
+    request(content, options, handleNetatmoResponse, callback, intentName, intentSlots);
+}
+
+
+function request(content, options, onResponse, callback, intentName, intentSlots){
+    var req = https.request(options, function(res) {
+        console.log("statusCode: ", res.statusCode);
+        console.log("headers: ", res.headers);
+
+        res.setEncoding('utf8');
+        res.on('data', function (data) {
+            console.log("body: " + data);
+            var parsedResponse = JSON.parse(data);
+            if (onResponse) {
+                onResponse(parsedResponse, callback, intentName, intentSlots);
+            }
+        });
+
+        res.on('error', function (err) {
+            console.log("An error occured | "+ err);
+        });
+
+        res.on('end', function() {});
+    });
+
+    req.on('error', function(err){
+        console.log('An error occured | ' + err)
+    });
+    req.write(content);
+    req.end();
 }
 
 
@@ -179,12 +173,17 @@ function onReceivedTokenResponse(parsedResponse, callback, intentName, intentSlo
  * and modules / devices can easily be added without modifications of the
  * lambda service
  */
-function getMeasure(parsedResponse, callback, intentName, intentSlots) {
+function handleNetatmoResponse(parsedResponse, callback, intentName, intentSlots) {
 
     // If we get no informations, we return always all values from outside
-    var locationName = !intentSlots || !intentSlots.Location || !intentSlots.Location.value 
-        ? "aussen" 
-        : intentSlots.Location.value;
+    var locationName = ""
+    if(!intentSlots || !intentSlots.Location || !intentSlots.Location.value){
+        locationName = "aussen";
+        intentName = "ALL";
+    } else {
+        locationName = intentSlots.Location.value;
+    }
+
     var im = locationName == "aussen" ? "" : "im ";    // Its the word im -> Temperatur IM wohnzimmer or temperatur '' aussen
     var speechOutput;
     var currentDevice;

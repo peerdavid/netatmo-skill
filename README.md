@@ -1,5 +1,5 @@
 This is an amazon alexa skill, to get values from your netatmo wetterstation.
-<b>This is not the official version -> currently (12/2016) there exists no official skill for the wetterstation</b>
+<br /><b>This is not the official version. Currently (12/2016) there exists no official skill for the wetterstation</b>
 
 # HowTo use
 Ask Alexa:

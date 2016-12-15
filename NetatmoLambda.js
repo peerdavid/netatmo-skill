@@ -12,7 +12,6 @@
  * http://stackoverflow.com/questions/33859826/linking-netatmo-weather-station-to-amazon-echo-alexa
  */
 
-var http = require('https'); 
 var https = require('https');
 var querystring = require('querystring');
 

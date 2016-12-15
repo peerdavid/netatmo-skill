@@ -10,6 +10,7 @@ Temperature nach der Temperatur im {Location}
 
 COZWEI wie der CO zwei Wert im {Location} ist
 COZWEI nach dem CO zwei Wert im {Location}
+COZWEI wie hoch der CO zwei Wert im {Location} ist
 COZWEI nach dem p p m Wert im {Location}
 
 Humidity wie hoch die Luftfeuchtigkeit im {Location} ist

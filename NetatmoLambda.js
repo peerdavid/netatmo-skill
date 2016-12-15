@@ -215,7 +215,7 @@ function handleNetatmoResponse(parsedResponse, callback, intentName, intentSlots
 
     // Check if we found it
     if(!currentDevice){
-        response(callback, "Ich konnte keine Station " + im + locationName + " finden.");
+        response(callback, "Ich konnte keine Station " + im + locationName + " finden. \n");
         return;
     }
 
@@ -233,7 +233,7 @@ function handleNetatmoResponse(parsedResponse, callback, intentName, intentSlots
     // Output value for one single sensor
     sensorName = convertIntentToSensorName(intentName);
     if(currentDevice[sensorName] == null){
-        response(callback, "Die Station " + im + locationName + " hat diesen Sensor nicht eingebaut.");
+        response(callback, "Die Station " + im + locationName + " hat diesen Sensor nicht eingebaut. \n");
         return;
     }
 
@@ -254,24 +254,24 @@ function convertIntentToSensorName(intentName){
 function getResponseTextForSensor(currentDevice, sensorName, im, locationName){
     var val = convertToGermanNumber(currentDevice[sensorName]);
     if(sensorName === "Temperature")  {
-        return im + locationName + " hat es " + val + " grad.";
+        return im + locationName + " hat es " + val + " grad. \n";
 
     } else if (sensorName === "CO2"){
-        return "Der CO2-Wert " + im + locationName + " beträgt " + val + " ppm.";
+        return "Der CO2-Wert " + im + locationName + " beträgt " + val + " ppm. \n";
 
     } else if( sensorName === "Humidity"){
-        return "Die Luftfeuchtigkeit " + im + locationName + " beträgt " + val + " prozent.";
+        return "Die Luftfeuchtigkeit " + im + locationName + " beträgt " + val + " prozent. \n";
 
     }  else if( sensorName === "Noise"){
-        return "Die Lautstärke " + im + locationName + " beträgt " + val + " dezibel.";
+        return "Die Lautstärke " + im + locationName + " beträgt " + val + " dezibel. \n";
     
     } else if( sensorName === "Pressure"){
-        return "Der Luftdruck " + im + locationName + " beträgt " + val + " milli bar.";
+        return "Der Luftdruck " + im + locationName + " beträgt " + val + " milli bar. \n";
     }
 
 
     // Unknown sensor, use default
-    return "Der " + sensorName + " wert liegt bei " + val;
+    return "Der " + sensorName + " wert liegt bei " + val + ". \n";
 }
 
 

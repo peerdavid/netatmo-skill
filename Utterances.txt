@@ -1,35 +1,46 @@
-ALL wie die Werten im {Location} sind
-ALL nach den Werten im {Location}
-ALL nach den {Location} Werten
+ALL Wie sind die Werte im {Location}
+ALL Wie sind die {Location} Werte
+ALL Wie ist es im {Location}
 ALL {Location}
 
-Temperature wie viel Grad es im {Location} hat
-Temperature wie die Temperatur im {Location} ist
-Temperature wie hoch die Temperatur im {Location} ist
-Temperature nach der Temperatur im {Location}
-Temperature nach der {Location} Temperatur
+Temperature Wie viel Grad hat es im {Location}
+Temperature Wie heiss ist es im {Location}
+Temperature Wie kalt ist es im {Location}
+Temperature Wie ist die Temperatur im {Location}
+Temperature Wie hoch ist die Temperatur im {Location}
+Temperature Wie ist die {Location} Temperatur
+Temperature Wie hoch ist die {Location} Temperatur
 Temperature {Location} Temperatur
+Temperature Temperatur {Location} 
 
-COZWEI wie der CO zwei Wert im {Location} ist
-COZWEI nach dem CO zwei Wert im {Location}
-COZWEI wie hoch der CO zwei Wert im {Location} ist
-COZWEI nach dem p p m Wert im {Location}
-COZWEI nach dem {Location} CO zwei Wert
-COZWEI  {Location} CO zwei
+COZWEI Wie gut ist die Luft im {Location}
+COZWEI Wie hoch ist der CO zwei Wert im {Location}
+COZWEI Wie hoch ist der p p m Wert im {Location}
+COZWEI Wie hoch ist der {Location} CO zwei Wert 
+COZWEI Wie hoch ist der {Location} p p m Wert
+COZWEI {Location} CO zwei
+COZWEI CO zwei {Location}
 
-Humidity wie hoch die Luftfeuchtigkeit im {Location} ist
-Humidity wie die Luftfeuchtigkeit im {Location} ist
-Humidity nach der Luftfeuchtigkeit im {Location}
-Humidity nach der {Location} Luftfeuchtigkeit
+Humidity Wie hoch ist die Luftfeuchtigkeit im {Location}
+Humidity Wie ist die Luftfeuchtigkeit im {Location}
+Humidity Wie hoch ist die {Location} Luftfeuchtigkeit 
+Humidity Wie ist die {Location} Luftfeuchtigkeit
 Humidity {Location} Luftfeuchtigkeit
+Humidity Luftfeuchtigkeit {Location}
 
-Noise wie laut es im {Location} ist
-Noise nach der Lautstärke im {Location}
-Noise nach der {Location} Lautstärke
+Noise Wie laut ist es im {Location}
+Noise Wie viel dezibel hat es im {Location}
+Noise Wie hoch ist die Lautstärke im {Location}
+Noise Wie ist die Lautstärke im {Location}
+Noise Wie hoch ist die {Location} Lautstärke
+Noise Wie ist die {Location} Lautstärke
 Noise {Location} Lautstärke
+Noise Lautstärke {Location}
 
-Pressure wie hoch der Luftdruck im {Location} ist
-Pressure wie der Luftdruck im {Location} ist
-Pressure nach dem Luftdruck im {Location}
-Pressure nach dem {Location} Luftdruck
+Pressure Wie viel milli bar hat es im {Location}
+Pressure Wie ist der Luftdruck im {Location}
+Pressure Wie hoch ist der Luftdruck im {Location}
+Pressure Wie ist der {Location} Luftdruck
+Pressure Wie hoch ist der {Location} Luftdruck
 Pressure {Location} Luftdruck
+Pressure Luftdruck {Location}

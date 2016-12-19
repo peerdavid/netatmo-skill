@@ -46,50 +46,55 @@ exports.handler = function (event, context) {
             context.succeed();
         }
     } catch (e) {
-        context.fail("Exception: " + e);
+        context.fail("Exception | " + e);
     }
 };
 
 
 function onSessionStarted(sessionStartedRequest, session) {
-    console.log("onSessionStarted requestId=" + sessionStartedRequest.requestId +
-            ", sessionId=" + session.sessionId);
+    console.log("OnSessionStarted Event" +
+        " | requestId: " + sessionStartedRequest.requestId +
+        " | sessionId: " + session.sessionId);
 }
 
 
 function onLaunch(launchRequest, session, callback) {
-    console.log("onLaunch requestId=" + launchRequest.requestId +
-            ", sessionId=" + session.sessionId);
+    console.log("OnLaunch Event" + 
+        " | RequestId: " + launchRequest.requestId +
+        " | SessionId: " + session.sessionId);
 
-    // Dispatch to your skill's launch.
     getTokenFromNetatmo(callback);
 }
 
 
 function onIntent(intentRequest, session, callback) {
-    console.log("onIntent requestId=" + intentRequest.requestId + ", sessionId=" + session.sessionId);
-
     var intent = intentRequest.intent;
     var intentName = intentRequest.intent.name;
     var intentSlots ;
-
-    console.log("intentRequest: "+ intentRequest);  
+  
     if (typeof intentRequest.intent.slots !== 'undefined') {
         intentSlots = intentRequest.intent.slots;
     }
+
+    console.log("OnIntent Event"+ 
+        " | RequestId:" + intentRequest.requestId + 
+        " | SessionId: " + session.sessionId +
+        " | IntentName: " + intentName + 
+        " | IntentSlots: " + intentSlots);
 
     getTokenFromNetatmo(callback, intentName, intentSlots);
 }
 
 
 function onSessionEnded(sessionEndedRequest, session) {
-    console.log("onSessionEnded requestId=" + sessionEndedRequest.requestId +
-            ", sessionId=" + session.sessionId);
+    console.log("Session ended" +
+        " | RequestId: " + sessionEndedRequest.requestId +
+        " | SessionId: " + session.sessionId);
 }
 
 
 function getTokenFromNetatmo(callback, intentName, intentSlots){
-    console.log("sending request to netatmo...")
+    console.log("Reading token from netatmo.")
 
     var content = querystring.stringify({
         'grant_type'    : 'password',
@@ -135,28 +140,33 @@ function onReceivedTokenResponse(parsedResponse, callback, intentName, intentSlo
 
 
 function request(content, options, onResponse, callback, intentName, intentSlots){
+
+    var responseStr = '';
     var req = https.request(options, function(res) {
-        console.log("statusCode: ", res.statusCode);
-        console.log("headers: ", res.headers);
+        console.log("Status Code | ", res.statusCode);
+        console.log("Headers | ", res.headers);
 
         res.setEncoding('utf8');
-        res.on('data', function (data) {
-            console.log("body: " + data);
-            var parsedResponse = JSON.parse(data);
+        res.on('data', function (chunk) {
+            console.log("Body Chunk | " + chunk);
+            responseStr += chunk;
+        });
+
+        res.on('error', function (err) {
+            console.log("A res. error occured | "+ err);
+        });
+
+        res.on('end', function() {
+            var parsedResponse = JSON.parse(responseStr);
+             console.log("Parsed body | " + JSON.stringify(parsedResponse));
             if (onResponse) {
                 onResponse(parsedResponse, callback, intentName, intentSlots);
             }
         });
-
-        res.on('error', function (err) {
-            console.log("An error occured | "+ err);
-        });
-
-        res.on('end', function() {});
     });
 
     req.on('error', function(err){
-        console.log('An error occured | ' + err)
+        console.log('A req. error occured | ' + err)
     });
     req.write(content);
     req.end();
@@ -280,6 +290,8 @@ function convertToGermanNumber(num){
 
 
 function response(callback, output) {
+    console.log("Response | " + output);
+
     var responseObject = {
         outputSpeech: {
             type: "PlainText",

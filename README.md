@@ -4,7 +4,6 @@ This is a german amazon alexa skill, to get values from your netatmo weather sta
 <br /><b>This is not the official version. Currently (12/2016) there exists no official skill for netatmo weather stations.</b>
 
 ## HowTo use
-<br /><br />
 Alexa, frage Wetterstation: Wie hoch ist der CO2-Wert im Wohnzimmer?<br />
 <i>Der CO2 Wert im Wohnzimmer beträgt 623 ppm.</i>
 <br /><br />

@@ -4,12 +4,11 @@ This is a german amazon alexa skill, to get values from your netatmo weather sta
 <br /><b>This is not the official version. Currently (12/2016) there exists no official skill for netatmo weather stations.</b>
 
 ## HowTo use
-Ask Alexa:
 <br /><br />
-Alexa, frage Wetterstation Zeus, wie hoch der CO2-Wert im Wohnzimmer ist.<br />
+Alexa, frage Wetterstation: Wie hoch ist der CO2-Wert im Wohnzimmer?<br />
 <i>Der CO2 Wert im Wohnzimmer beträgt 623 ppm.</i>
 <br /><br />
-Alexa, frage Wetterstation Zeus, wie viel Grad es Aussen hat.<br />
+Alexa, frage Wetterstation: Wie hoch ist die Aussentemperatur?<br />
 <i>Aussen hat es 4,6 Grad.</i>
 
 ## HowTo Setup

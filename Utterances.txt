@@ -1,29 +1,35 @@
 ALL wie die Werten im {Location} sind
 ALL nach den Werten im {Location}
 ALL nach den {Location} Werten
+ALL {Location}
 
 Temperature wie viel Grad es im {Location} hat
 Temperature wie die Temperatur im {Location} ist
 Temperature wie hoch die Temperatur im {Location} ist
 Temperature nach der Temperatur im {Location}
 Temperature nach der {Location} Temperatur
+Temperature {Location} Temperatur
 
 COZWEI wie der CO zwei Wert im {Location} ist
 COZWEI nach dem CO zwei Wert im {Location}
 COZWEI wie hoch der CO zwei Wert im {Location} ist
 COZWEI nach dem p p m Wert im {Location}
 COZWEI nach dem {Location} CO zwei Wert
+COZWEI  {Location} CO zwei
 
 Humidity wie hoch die Luftfeuchtigkeit im {Location} ist
 Humidity wie die Luftfeuchtigkeit im {Location} ist
 Humidity nach der Luftfeuchtigkeit im {Location}
 Humidity nach der {Location} Luftfeuchtigkeit
+Humidity {Location} Luftfeuchtigkeit
 
 Noise wie laut es im {Location} ist
 Noise nach der Lautstärke im {Location}
 Noise nach der {Location} Lautstärke
+Noise {Location} Lautstärke
 
 Pressure wie hoch der Luftdruck im {Location} ist
 Pressure wie der Luftdruck im {Location} ist
 Pressure nach dem Luftdruck im {Location}
 Pressure nach dem {Location} Luftdruck
+Pressure {Location} Luftdruck

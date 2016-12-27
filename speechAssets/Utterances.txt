@@ -44,3 +44,8 @@ Pressure Wie ist der {Location} Luftdruck
 Pressure Wie hoch ist der {Location} Luftdruck
 Pressure {Location} Luftdruck
 Pressure Luftdruck {Location}
+
+AMAZON.StopIntent nein
+AMAZON.StopIntent nein danke
+AMAZON.StopIntent stop
+AMAZON.StopIntent beenden

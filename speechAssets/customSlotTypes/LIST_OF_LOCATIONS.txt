@@ -1,5 +1,3 @@
-NAME = LIST_OF_LOCATIONS 
-------------------------
 Aussen
 Wohnzimmer
 Küche

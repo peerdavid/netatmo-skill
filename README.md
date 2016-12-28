@@ -4,7 +4,7 @@ This is a german amazon alexa skill, to get values from your netatmo weather sta
 <br /><b>This is not the official version. Currently (12/2016) there exists no official skill for netatmo weather stations.</b>
 
 ## HowTo use
-Alexa, öffne Wetterstation
+Alexa, öffne Wetterstation<br />
 <i>Sie haben an den folgenden Orten eine Wetterstation: Wohnzimer, ...</i><br />
 Wohnzimmer<br />
 <i>Im Wohnzimer haben sie folgende Sensoren: Temperatur, CO2, ..<i><br />

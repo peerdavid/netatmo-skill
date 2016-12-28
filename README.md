@@ -11,11 +11,11 @@ Wohnzimmer<br />
 Temperatur<br />
 <i>Im Wohnzimer hat es 21,3 Grad.<i>
 
-<br /><br /><br />
+<br /><br />
 Alexa, frage Wetterstation: Wie hoch ist der CO2-Wert im Wohnzimmer?<br />
 <i>Der CO2 Wert im Wohnzimmer beträgt 623 ppm.</i>
 
-<br /><br /><br />
+<br /><br />
 Alexa, frage Wetterstation: Wie hoch ist die Aussentemperatur?<br />
 <i>Aussen hat es 4,6 Grad.</i>
 

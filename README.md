@@ -4,9 +4,18 @@ This is a german amazon alexa skill, to get values from your netatmo weather sta
 <br /><b>This is not the official version. Currently (12/2016) there exists no official skill for netatmo weather stations.</b>
 
 ## HowTo use
+Alexa, öffne Wetterstation
+<i>Sie haben an den folgenden Orten eine Wetterstation: Wohnzimer, ...</i><br />
+Wohnzimmer<br />
+<i>Im Wohnzimer haben sie folgende Sensoren: Temperatur, CO2, ..<i><br />
+Temperatur<br />
+<i>Im Wohnzimer hat es 21,3 Grad.<i>
+
+<br /><br /><br />
 Alexa, frage Wetterstation: Wie hoch ist der CO2-Wert im Wohnzimmer?<br />
 <i>Der CO2 Wert im Wohnzimmer beträgt 623 ppm.</i>
-<br /><br />
+
+<br /><br /><br />
 Alexa, frage Wetterstation: Wie hoch ist die Aussentemperatur?<br />
 <i>Aussen hat es 4,6 Grad.</i>
 

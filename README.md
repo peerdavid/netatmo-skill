@@ -5,9 +5,9 @@ This is a german amazon alexa skill, to get values from your netatmo weather sta
 
 ## HowTo use
 Alexa, öffne Wetterstation<br />
-<i>Sie haben an den folgenden Orten eine Wetterstation: Wohnzimer, ...</i><br />
+<i>Sie haben an den folgenden Orten eine Wetterstation: Wohnzimer, ... Von welchem Ort möchtest du Daten wissen?</i><br />
 Wohnzimmer<br />
-<i>Im Wohnzimer haben sie folgende Sensoren: Temperatur, CO2, ..<i><br />
+<i>Im Wohnzimer haben sie folgende Sensoren: Temperatur, CO2, ... Welchen Wert möchtest du im Wohnzimmer wissen?<i><br />
 Temperatur<br />
 <i>Im Wohnzimer hat es 21,3 Grad.<i>
 

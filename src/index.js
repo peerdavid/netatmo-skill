@@ -163,8 +163,9 @@ Netatmo.prototype.tellSensorInformations = function(intent, session, response){
         }
 
         if(module[sensorName] == null){
-            var responseText = "Die Wetterstation " + im + locationName + " hat diesen Sensor nicht eingebaut. \n";
-            self.askForSensor(data, intent, session, response, responseText);
+            var germanSensorName = convertToGermanSensorName(sensorName);
+            var responseText = "Die Wetterstation " + im + locationName + " hat keinen " + germanSensorName + " Sensor. \n";
+            self.askForSensor(data, session, response, responseText);
             return;
         }
 
@@ -183,8 +184,10 @@ Netatmo.prototype.askForLocation = function(session, response, responseText){
     var self = this;
     self.getData(session, function(data){
         var locations = self.readLocationNames(data);
-        var speechOutput = responseText + "Sie haben an den folgenden Orten eine Wetterstation. \n " + locations.join(".\n ") + ". Von welchem Ort möchtest du Daten wissen?";
-        var reprompText = "Von welchem Ort möchtest du Daten wissen?";
+        var reprompText = session.attributes.sensorName 
+                ? "Von welchem Ort sollte ich den " + convertToGermanSensorName(session.attributes.sensorName) +" Sensor auslesen? \n"
+                : "Von welchem Ort möchtest du Daten wissen?";
+        var speechOutput = responseText + "Sie haben an den folgenden Orten eine Wetterstation. \n " + locations.join(".\n ") + "\n \n" + reprompText;
         response.ask(speechOutput, reprompText);
 
     }, function(err){
@@ -208,7 +211,7 @@ Netatmo.prototype.askForSensor = function(data, session, response, responseText)
     var germanSensors = [];
     for(var i = 0; i < module.supported_sensors.length; i++){
         var sensorName = module.supported_sensors[i];
-        var germanName = convertSensorNameToGerman(sensorName);
+        var germanName = convertToGermanSensorName(sensorName);
         germanSensors.push(germanName);
     }
 
@@ -224,16 +227,16 @@ Netatmo.prototype.readLocationNames = function(data){
     var modules = data.body.modules;
     var locations = [];
 
-    // Search in devices (inside of house)
-    for (var i = 0; i < devices.length; i++){
-        var device = devices[i];
-        locations.push(device.module_name);
-    }
-
     // Search in modules (outside of house)
     for (var i = 0; i < modules.length; i++){
         var module = modules[i];
         locations.push(module.module_name);
+    }
+
+    // Search in devices (inside of house)
+    for (var i = 0; i < devices.length; i++){
+        var device = devices[i];
+        locations.push(device.module_name);
     }
 
     return locations;
@@ -409,7 +412,7 @@ function getResponseTextForSensor(module, sensorName, im, locationName){
 }
 
 
-function convertSensorNameToGerman(sensorName){
+function convertToGermanSensorName(sensorName){
     if(sensorName === "Temperature")  {
         return "Temperatur";
 

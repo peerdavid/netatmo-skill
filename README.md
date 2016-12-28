@@ -1,4 +1,4 @@
-# Alexa skill for Netatmo weather stations
+# German alexa skill for Netatmo weather stations
 
 This is a german amazon alexa skill, to get values from your netatmo weather stations.
 <br /><b>This is not the official version. Currently (12/2016) there exists no official skill for netatmo weather stations.</b>

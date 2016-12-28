@@ -19,6 +19,13 @@ var AlexaSkill = require('./AlexaSkill');
 var https = require('https');
 var querystring = require('querystring');
 
+
+/*
+ * ERROR CODES
+ */
+var ERR_READ_DATA = "Beim auslesen der Daten ist ein Fehler aufgetreten.";
+
+
 /**
  * To read more about inheritance in JavaScript, see the link below.
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Inheritance
@@ -52,11 +59,30 @@ Netatmo.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, 
 };
 
 
+
 Netatmo.prototype.intentHandlers = {    
     "Module": function (intent, session, response) {
-        response.tell("Welcher Wert interessiert dich?");
+        var self = this;
+
+        self.getData(session, function(data){
+            var locationName = getLocationNameFromIntentSlots(intent.slots);
+
+            var module = self.readModule(locationName, data);
+            if(!module){
+                response.tell("Im " + locationName + " ist keine Wetterstation vorhanden.");
+                return;
+            }
+
+            var speechOutput = "Die Wetterstation im " + locationName  + " hat die folgenden Sensoren: "+ module.supported_sensors.join(", ") +
+                               ". Welcher Wert interessiert dich im " + locationName + "?";
+            var reprompText = "Welcher Wert interessiert dich im " + locationName + "?";
+            response.ask(speechOutput, reprompText);
+
+        }, function(err){
+            response.tell(ERR_READ_DATA);       
+        });
     },
-    
+
     "ALL": function (intent, session, response) {
         response.tell("Sorry, bin gerade am programmiern... Liebe Grüße David");
     },
@@ -98,11 +124,11 @@ Netatmo.prototype.intentHandlers = {
 Netatmo.prototype.askForModule = function(session, response){
     var self = this;
     self.getData(session, function(data){
-        modules = self.readModules(data);
-        
-        var speechOutput = "Sie haben an den Orten " + modules.join(", ") + " eine Modul. Von welchem Ort möchtest du Daten wissen?";
+        var locations = self.readLocationNames(data);
+        var speechOutput = "Sie haben an den Orten " + locations.join(", ") + " eine Wetterstation. Von welchem Ort möchtest du Daten wissen?";
         var reprompText = "Von welchem Ort möchtest du Daten wissen?";
         response.ask(speechOutput, reprompText);
+
     }, function(err){
         var speechOutput = "Mit Wetterstation kannst du deine privaten Wetter daten abfragen. Von welchem Ort möchtest du Daten wissen?";
         var reprompText = "Von welchem Ort möchtest du Daten wissen?";
@@ -111,24 +137,54 @@ Netatmo.prototype.askForModule = function(session, response){
 }
 
 
-Netatmo.prototype.readModules = function(data){
+Netatmo.prototype.readLocationNames = function(data){
     var devices = data.body.devices;
     var modules = data.body.modules;
-    var moduleNames = [];
+    var locations = [];
 
     // Search in devices (inside of house)
     for (var i = 0; i < devices.length; i++){
         var device = devices[i];
-        moduleNames.push(device.module_name);
+        locations.push(device.module_name);
     }
 
     // Search in modules (outside of house)
     for (var i = 0; i < modules.length; i++){
         var module = modules[i];
-        moduleNames.push(module.module_name);
+        locations.push(module.module_name);
     }
 
-    return moduleNames;
+    return locations;
+}
+
+
+Netatmo.prototype.readModule = function(locationName, data){
+    var devices = data.body.devices;
+    var modules = data.body.modules;
+    var locationName = locationName.toLowerCase();
+    var locations = [];
+
+    // Search in devices (inside of house)
+    for (var i = 0; i < devices.length; i++){
+        var device = devices[i];
+        if(device.module_name.toLowerCase() === locationName){
+            var ret = device.dashboard_data;
+            ret.supported_sensors = device.data_type;
+            return ret;
+        }
+    }
+
+    // Search in modules (outside of house)
+    for (var i = 0; i < modules.length; i++){
+        var device = modules[i];
+        if(device.module_name.toLowerCase() === locationName){
+            var ret = device.dashboard_data;
+            ret.supported_sensors = device.data_type;
+            return ret;
+        }
+    }
+
+    return null;
 }
 
 
@@ -191,6 +247,15 @@ Netatmo.prototype.getAccessToken = function(onResponse, onError){
     };
 
     sendRequest(content, options, createAccessToken, onError);
+}
+
+
+function getLocationNameFromIntentSlots(intentSlots){
+    if(!intentSlots || !intentSlots.Location || !intentSlots.Location.value){
+        return null;
+    }
+
+    return intentSlots.Location.value;
 }
 
 

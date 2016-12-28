@@ -48,7 +48,8 @@ Netatmo.prototype.eventHandlers.onSessionStarted = function (sessionStartedReque
 
 Netatmo.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
     console.log("Netatmo onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
-    this.askForModule(session, response);
+    var responseText = "";
+    this.askForLocation(session, response, responseText);
 };
 
 
@@ -63,32 +64,31 @@ Netatmo.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, 
 Netatmo.prototype.intentHandlers = {    
     "Module": function (intent, session, response) {
         var self = this;
+        setLocationNameFromIntentSlots(session, intent.slots);
+        var locationName = session.attributes.locationName;
 
         self.getData(session, function(data){
-            var locationName = getLocationNameFromIntentSlots(intent.slots);
-
-            var module = self.readModule(locationName, data);
-            if(!module){
-                response.tell("Im " + locationName + " ist keine Wetterstation vorhanden.");
-                return;
+            var responseText = "";
+            if(!session.attributes.sensorName){
+                self.askForSensor(data, session, response, responseText);
+            } else {
+                // If we have all informations, we dont ask again -> tell him the informations
+                self.tellSensorInformations(intent, session, response);
             }
-
-            var speechOutput = "Die Wetterstation im " + locationName  + " hat die folgenden Sensoren: "+ module.supported_sensors.join(", ") +
-                               ". Welcher Wert interessiert dich im " + locationName + "?";
-            var reprompText = "Welcher Wert interessiert dich im " + locationName + "?";
-            response.ask(speechOutput, reprompText);
-
         }, function(err){
             response.tell(ERR_READ_DATA);       
         });
     },
 
     "ALL": function (intent, session, response) {
-        response.tell("Sorry, bin gerade am programmiern... Liebe Grüße David");
+        response.tell("Sorry, diese Funktion wird nicht mehr unterstützt.");
     },
 
     "Temperature": function (intent, session, response) {
-        response.tell("Hoaße partie do herinnen...");
+        var sensorName = convertIntentToSensorName(intent.name);
+        session.attributes.sensorName = sensorName;
+
+        this.tellSensorInformations(intent, session, response);
     },
 
     "Humidity": function (intent, session, response) {
@@ -108,7 +108,8 @@ Netatmo.prototype.intentHandlers = {
     },
 
     "AMAZON.HelpIntent": function (intent, session, response) {
-        this.askForModule(session, response);
+        responseText = "Mit Wetterstation kannst du deine privaten Wetter daten abfragen. "
+        this.askForLocation(session, response, responseText);
     },
 
     "AMAZON.StopIntent": function (intent, session, response) {
@@ -121,11 +122,60 @@ Netatmo.prototype.intentHandlers = {
 };
 
 
-Netatmo.prototype.askForModule = function(session, response){
+Netatmo.prototype.tellSensorInformations = function(intent, session, response){
+    var self = this;
+
+    self.getData(session, function(data){
+
+        // Get location name from session or intent
+        if(!session.attributes.locationName){
+            setLocationNameFromIntentSlots(session, intent.slots);
+        }
+
+        var locationName = session.attributes.locationName;
+        var im = session.attributes.im;
+        if(!locationName){
+            var responseText = "";
+            self.askForLocation(session, response, responseText);
+            return;
+        }
+
+        var module = self.readModule(locationName, data);
+        if(!module){
+            var responseText = im + locationName + " ist keine Wetterstation vorhanden. \n";
+            self.askForLocation(session, response, responseText);
+            return;
+        }
+
+        // Get sensor name from session
+        var sensorName = session.attributes.sensorName;
+        if(!sensorName){
+            self.askForSensor(data, intent, session, response, responseText);
+            return;
+        }
+
+        if(module[sensorName] == null){
+            var responseText = "Die Wetterstation " + im + locationName + " hat diesen Sensor nicht eingebaut. \n";
+            self.askForSensor(data, intent, session, response, responseText);
+            return;
+        }
+
+        // Everything succeeded, so return the value
+        var responseText = getResponseTextForSensor(module, sensorName, im, locationName);
+        var cardTitle = locationName;
+        var cardContent = convertSensorNameToGerman(sensorName) + ": " + module[sensorName];
+        response.tellWithCard(responseText, cardTitle, cardContent);
+
+    }, function(err){
+        response.tell(ERR_READ_DATA);
+    });
+}
+
+Netatmo.prototype.askForLocation = function(session, response, responseText){
     var self = this;
     self.getData(session, function(data){
         var locations = self.readLocationNames(data);
-        var speechOutput = "Sie haben an den Orten " + locations.join(", ") + " eine Wetterstation. Von welchem Ort möchtest du Daten wissen?";
+        var speechOutput = responseText + "Sie haben an den folgenden Orten eine Wetterstation: " + locations.join(", ") + ". Von welchem Ort möchtest du Daten wissen?";
         var reprompText = "Von welchem Ort möchtest du Daten wissen?";
         response.ask(speechOutput, reprompText);
 
@@ -134,6 +184,23 @@ Netatmo.prototype.askForModule = function(session, response){
         var reprompText = "Von welchem Ort möchtest du Daten wissen?";
         response.ask(speechOutput, reprompText);
     });
+}
+
+
+Netatmo.prototype.askForSensor = function(data, session, response, responseText){
+    var locationName = session.attributes.locationName;
+    var im = session.attributes.im;
+
+    var module = this.readModule(locationName, data);
+    if(!module){
+        response.tell(im + locationName + " ist keine Wetterstation vorhanden.");
+        return;
+    }
+
+    var speechOutput = responseText + "Die Wetterstation " + im + locationName  + " hat die folgenden Sensoren: "+ module.supported_sensors.join(", ") +
+                        ". Welcher Wert interessiert dich " + im + locationName + "?";
+    var reprompText = "Welcher Wert interessiert dich " + im + locationName + "?";
+    response.ask(speechOutput, reprompText);
 }
 
 
@@ -250,12 +317,13 @@ Netatmo.prototype.getAccessToken = function(onResponse, onError){
 }
 
 
-function getLocationNameFromIntentSlots(intentSlots){
+function setLocationNameFromIntentSlots(session, intentSlots){
     if(!intentSlots || !intentSlots.Location || !intentSlots.Location.value){
-        return null;
+        return;
     }
 
-    return intentSlots.Location.value;
+    session.attributes.locationName = intentSlots.Location.value;
+    session.attributes.im = session.attributes.locationName.toLowerCase() == "aussen" ? "" : "im "; ;
 }
 
 
@@ -290,6 +358,66 @@ function sendRequest(content, options, onResponse, onError){
     });
     req.write(content);
     req.end();
+}
+
+
+function convertIntentToSensorName(intentName){
+    if(intentName === "COZWEI"){
+        return "CO2";
+    }
+
+    return intentName;
+}
+
+
+function getResponseTextForSensor(module, sensorName, im, locationName){
+    var val = convertToGermanNumber(module[sensorName]);
+    if(sensorName === "Temperature")  {
+        return im + locationName + " hat es " + val + " grad. \n";
+
+    } else if (sensorName === "CO2"){
+        return "Der CO2-Wert " + im + locationName + " beträgt " + val + " ppm. \n";
+
+    } else if( sensorName === "Humidity"){
+        return "Die Luftfeuchtigkeit " + im + locationName + " beträgt " + val + " prozent. \n";
+
+    }  else if( sensorName === "Noise"){
+        return "Die Lautstärke " + im + locationName + " beträgt " + val + " dezibel. \n";
+    
+    } else if( sensorName === "Pressure"){
+        return "Der Luftdruck " + im + locationName + " beträgt " + val + " milli bar. \n";
+    }
+
+
+    // Unknown sensor, use default
+    return "Der " + sensorName + " wert liegt bei " + val + ". \n";
+}
+
+
+function convertSensorNameToGerman(module, sensorName, im, locationName){
+    if(sensorName === "Temperature")  {
+        return "Temperatur";
+
+    } else if (sensorName === "CO2"){
+        return "CO2";
+
+    } else if( sensorName === "Humidity"){
+        return "Luftfeuchtigkeit";
+
+    }  else if( sensorName === "Noise"){
+        return "Lautstärke";
+    
+    } else if( sensorName === "Pressure"){
+        return "Luftdruck";
+    }
+
+    // Unknown sensor, use default
+    return sensorName;
+}
+
+
+function convertToGermanNumber(num){
+    return num.toString().replace(".", ",");
 }
 
 

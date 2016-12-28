@@ -11,15 +11,6 @@
           ]
         },
         {
-          "intent": "ALL",
-          "slots": [
-            {
-              "name": "Location",
-              "type": "LIST_OF_LOCATIONS"
-            }
-          ]
-        },
-        {
           "intent": "Temperature",
           "slots": [
             {

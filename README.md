@@ -18,7 +18,7 @@ Alexa, frage Wetterstation: Wie hoch ist die Aussentemperatur?<br />
 5. Copy the client id and the client secret.
 6. Register as a developer on amazon aws.
 7. Create a new lambda function (type = NodeJS)
-8. Copy the code of NetatmoLambda.js into the lambda function
+8. Upload deploy.zip to your lambda function (build with deploy.sh if you change anything)
 9. Set the environment variables (key/value pairs): CLIENT_ID, CLIENT_SECRET, USER_ID, PASSWORD
 10. Create a new Alexa Skill (Type = Custom)
 11. Set an Invocation Name (To use it in the same way as the example above, set it to "Wetterstation Zeus")

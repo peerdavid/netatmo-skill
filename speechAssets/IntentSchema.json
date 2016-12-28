@@ -2,6 +2,15 @@
 "intents": 
     [
         {
+          "intent": "Module",
+          "slots": [
+            {
+              "name": "Location",
+              "type": "LIST_OF_LOCATIONS"
+            }
+          ]
+        },
+        {
           "intent": "ALL",
           "slots": [
             {

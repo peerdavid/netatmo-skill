@@ -16,7 +16,8 @@ var APP_ID = null; //"amzn1.ask.skill.f3acff9f-f593-4793-9682-27b789533f6f";
  * The AlexaSkill prototype and helper functions
  */
 var AlexaSkill = require('./AlexaSkill');
-var http = require('http');
+var https = require('https');
+var querystring = require('querystring');
 
 /**
  * To read more about inheritance in JavaScript, see the link below.
@@ -40,7 +41,7 @@ Netatmo.prototype.eventHandlers.onSessionStarted = function (sessionStartedReque
 
 Netatmo.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
     console.log("Netatmo onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
-    askForModule(response);
+    this.askForModule(session, response);
 };
 
 
@@ -51,13 +52,17 @@ Netatmo.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, 
 };
 
 
-Netatmo.prototype.intentHandlers = {
+Netatmo.prototype.intentHandlers = {    
+    "Module": function (intent, session, response) {
+        response.tell("Welcher Wert interessiert dich?");
+    },
+    
     "ALL": function (intent, session, response) {
         response.tell("Sorry, bin gerade am programmiern... Liebe Grüße David");
     },
 
     "Temperature": function (intent, session, response) {
-        response.tell("Sorry, bin gerade am programmiern... Liebe Grüße David");
+        response.tell("Hoaße partie do herinnen...");
     },
 
     "Humidity": function (intent, session, response) {
@@ -77,7 +82,7 @@ Netatmo.prototype.intentHandlers = {
     },
 
     "AMAZON.HelpIntent": function (intent, session, response) {
-        askForModule(response);
+        this.askForModule(session, response);
     },
 
     "AMAZON.StopIntent": function (intent, session, response) {
@@ -90,10 +95,136 @@ Netatmo.prototype.intentHandlers = {
 };
 
 
-function askForModule(response){
-    var speechOutput = "Mit Wetterstation kannst du deine privaten Wetter daten abfragen. Welches Modul soll ich abfragen?";
-    var reprompText = "Welches Modul soll ich abfragen?";
-    response.ask(speechOutput, reprompText);
+Netatmo.prototype.askForModule = function(session, response){
+    var self = this;
+    self.getData(session, function(data){
+        modules = self.readModules(data);
+        
+        var speechOutput = "Sie haben an den Orten " + modules.join(", ") + " eine Modul. Von welchem Ort möchtest du Daten wissen?";
+        var reprompText = "Von welchem Ort möchtest du Daten wissen?";
+        response.ask(speechOutput, reprompText);
+    }, function(err){
+        var speechOutput = "Mit Wetterstation kannst du deine privaten Wetter daten abfragen. Von welchem Ort möchtest du Daten wissen?";
+        var reprompText = "Von welchem Ort möchtest du Daten wissen?";
+        response.ask(speechOutput, reprompText);
+    });
+}
+
+
+Netatmo.prototype.readModules = function(data){
+    var devices = data.body.devices;
+    var modules = data.body.modules;
+    var moduleNames = [];
+
+    // Search in devices (inside of house)
+    for (var i = 0; i < devices.length; i++){
+        var device = devices[i];
+        moduleNames.push(device.module_name);
+    }
+
+    // Search in modules (outside of house)
+    for (var i = 0; i < modules.length; i++){
+        var module = modules[i];
+        moduleNames.push(module.module_name);
+    }
+
+    return moduleNames;
+}
+
+
+Netatmo.prototype.getData = function(session, onResponse, onError){
+
+    // If it is already stored in our session, we have nothing to do
+    if(session.attributes.data){
+        console.log("Loading netatmo data from session.");
+        onResponse(session.attributes.data);
+        return;
+    }
+
+    console.log("Loading netatmo data from https://api.netatmo.net");
+    this.getAccessToken(function(accessToken){
+        var options = {
+            host: 'api.netatmo.net',
+            path: '/api/devicelist',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': Buffer.byteLength(accessToken)
+            }
+        };
+
+        var storeIntoSession = function(data){
+            session.attributes.data = data;
+            onResponse(data);
+        }
+
+        sendRequest(accessToken, options, storeIntoSession, onError);
+    }, onError);
+}
+
+
+Netatmo.prototype.getAccessToken = function(onResponse, onError){
+    var content = querystring.stringify({
+        'grant_type'    : 'password',
+        'client_id'     : process.env.CLIENT_ID,
+        'client_secret' : process.env.CLIENT_SECRET,
+        'username'      : process.env.USER_ID,
+        'password'      : process.env.PASSWORD,
+        'scope'         : 'read_station'
+    });
+
+    var options = {
+        host: 'api.netatmo.net',
+        path: '/oauth2/token',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': Buffer.byteLength(content)
+        }
+    };
+
+    var createAccessToken = function(parsedResponse){
+        var accessToken = querystring.stringify({
+            'access_token'  : parsedResponse.access_token
+        });
+        onResponse(accessToken);
+    };
+
+    sendRequest(content, options, createAccessToken, onError);
+}
+
+
+function sendRequest(content, options, onResponse, onError){
+    var responseStr = '';
+    var req = https.request(options, function(res) {
+        console.log("Status Code | ", res.statusCode);
+        console.log("Headers | ", res.headers);
+
+        res.setEncoding('utf8');
+        res.on('data', function (chunk) {
+            console.log("Body Chunk | " + chunk);
+            responseStr += chunk;
+        });
+
+        res.on('error', function (err) {
+            console.log("A res. error occured | "+ err);
+        });
+
+        res.on('end', function() {
+            var parsedResponse = JSON.parse(responseStr);
+            console.log("Parsed body | " + JSON.stringify(parsedResponse));
+            if (onResponse) {
+                onResponse(parsedResponse);
+            }
+        });
+    });
+
+    req.on('error', function(err){
+        console.log('A req. error occured | ' + err)
+        onError(err);
+    });
+    req.write(content);
+    req.end();
 }
 
 

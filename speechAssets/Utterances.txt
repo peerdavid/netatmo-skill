@@ -1,7 +1,7 @@
+Module {Location}
+
 ALL Wie sind die Werte im {Location}
 ALL Wie sind die {Location} Werte
-ALL Wie ist es im {Location}
-ALL {Location}
 
 Temperature Wie viel Grad hat es im {Location}
 Temperature Wie heiss ist es im {Location}

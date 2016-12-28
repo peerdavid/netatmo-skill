@@ -10,7 +10,7 @@
 /**
  * App ID for the skill
  */
-var APP_ID = null; //"amzn1.ask.skill.f3acff9f-f593-4793-9682-27b789533f6f";
+var APP_ID = null; 
 
 /**
  * The AlexaSkill prototype and helper functions

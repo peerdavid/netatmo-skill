@@ -60,7 +60,6 @@ Netatmo.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, 
 };
 
 
-
 Netatmo.prototype.intentHandlers = {    
     "Module": function (intent, session, response) {
         var self = this;
@@ -80,9 +79,6 @@ Netatmo.prototype.intentHandlers = {
         });
     },
 
-    "ALL": function (intent, session, response) {
-        response.tell("Sorry, diese Funktion wird nicht mehr unterstützt.");
-    },
 
     "Temperature": function (intent, session, response) {
         var sensorName = convertIntentToSensorName(intent.name);
@@ -92,19 +88,31 @@ Netatmo.prototype.intentHandlers = {
     },
 
     "Humidity": function (intent, session, response) {
-        response.tell("Sorry, bin gerade am programmiern... Liebe Grüße David");
+        var sensorName = convertIntentToSensorName(intent.name);
+        session.attributes.sensorName = sensorName;
+
+        this.tellSensorInformations(intent, session, response);
     },
 
     "COZWEI": function (intent, session, response) {
-        response.tell("Sorry, bin gerade am programmiern... Liebe Grüße David");
+        var sensorName = convertIntentToSensorName(intent.name);
+        session.attributes.sensorName = sensorName;
+
+        this.tellSensorInformations(intent, session, response);
     },
 
     "Noise": function (intent, session, response) {
-        response.tell("Sorry, bin gerade am programmiern... Liebe Grüße David");
+        var sensorName = convertIntentToSensorName(intent.name);
+        session.attributes.sensorName = sensorName;
+
+        this.tellSensorInformations(intent, session, response);
     },
 
     "Pressure": function (intent, session, response) {
-        response.tell("Sorry, bin gerade am programmiern... Liebe Grüße David");
+        var sensorName = convertIntentToSensorName(intent.name);
+        session.attributes.sensorName = sensorName;
+
+        this.tellSensorInformations(intent, session, response);
     },
 
     "AMAZON.HelpIntent": function (intent, session, response) {
@@ -175,7 +183,7 @@ Netatmo.prototype.askForLocation = function(session, response, responseText){
     var self = this;
     self.getData(session, function(data){
         var locations = self.readLocationNames(data);
-        var speechOutput = responseText + "Sie haben an den folgenden Orten eine Wetterstation: " + locations.join(", ") + ". Von welchem Ort möchtest du Daten wissen?";
+        var speechOutput = responseText + "Sie haben an den folgenden Orten eine Wetterstation. \n " + locations.join(".\n ") + ". Von welchem Ort möchtest du Daten wissen?";
         var reprompText = "Von welchem Ort möchtest du Daten wissen?";
         response.ask(speechOutput, reprompText);
 
@@ -197,9 +205,16 @@ Netatmo.prototype.askForSensor = function(data, session, response, responseText)
         return;
     }
 
-    var speechOutput = responseText + "Die Wetterstation " + im + locationName  + " hat die folgenden Sensoren: "+ module.supported_sensors.join(", ") +
-                        ". Welcher Wert interessiert dich " + im + locationName + "?";
-    var reprompText = "Welcher Wert interessiert dich " + im + locationName + "?";
+    var germanSensors = [];
+    for(var i = 0; i < module.supported_sensors.length; i++){
+        var sensorName = module.supported_sensors[i];
+        var germanName = convertSensorNameToGerman(sensorName);
+        germanSensors.push(germanName);
+    }
+
+    var speechOutput = responseText + "Die Wetterstation " + im + locationName  + " hat die folgenden Sensoren. \n "+ germanSensors.join(".\n ") +
+                        ". Welchen Wert möchtest du " + im + locationName + " wissen?";
+    var reprompText = "Welchen Wert möchtest du " + im + locationName + " wissen?";
     response.ask(speechOutput, reprompText);
 }
 
@@ -394,7 +409,7 @@ function getResponseTextForSensor(module, sensorName, im, locationName){
 }
 
 
-function convertSensorNameToGerman(module, sensorName, im, locationName){
+function convertSensorNameToGerman(sensorName){
     if(sensorName === "Temperature")  {
         return "Temperatur";
 

@@ -71,7 +71,7 @@ Netatmo.prototype.intentHandlers = {
             if(!session.attributes.sensorName){
                 self.askForSensor(data, session, response, responseText);
             } else {
-                // If we have all informations, we dont ask again -> tell him the informations
+                // If we have all informations we dont ask the user again
                 self.tellSensorInformations(intent, session, response);
             }
         }, function(err){
@@ -170,8 +170,8 @@ Netatmo.prototype.tellSensorInformations = function(intent, session, response){
 
         // Everything succeeded, so return the value
         var responseText = getResponseTextForSensor(module, sensorName, im, locationName);
-        var cardTitle = locationName;
-        var cardContent = convertSensorNameToGerman(sensorName) + ": " + module[sensorName];
+        var cardTitle = "Wetterstation - " + locationName;
+        var cardContent = sensorName + ": " + module[sensorName];
         response.tellWithCard(responseText, cardTitle, cardContent);
 
     }, function(err){
@@ -414,7 +414,7 @@ function convertSensorNameToGerman(sensorName){
         return "Temperatur";
 
     } else if (sensorName === "CO2"){
-        return "CO2";
+        return "C.O. zwei";
 
     } else if( sensorName === "Humidity"){
         return "Luftfeuchtigkeit";

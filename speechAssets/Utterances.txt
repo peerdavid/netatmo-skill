@@ -15,6 +15,7 @@ Temperature Temperatur {Location}
 
 COZWEI CO zwei
 COZWEI nach dem CO zwei Wert
+COZWEI nach dem CO zwei Wert im {Location}
 COZWEI nach CO zwei
 COZWEI ob ich im {Location} lüften muss
 COZWEI wie gut die Luft im {Location} ist
@@ -27,6 +28,7 @@ COZWEI CO zwei {Location}
 
 Humidity Luftfeuchtigkeit
 Humidity nach der Luftfeuchtigkeit
+Humidity nach der Luftfeuchtigkeit im {Location}
 Humidity Wie hoch ist die Luftfeuchtigkeit im {Location}
 Humidity Wie ist die Luftfeuchtigkeit im {Location}
 Humidity Wie hoch ist die {Location} Luftfeuchtigkeit 
@@ -37,6 +39,7 @@ Humidity Luftfeuchtigkeit {Location}
 Noise Lautstärke
 Noise nach der Lautstärke
 Noise wie laut es ist
+Noise nach der Lautstärke im {Location} 
 Noise wie laut es im {Location} ist
 Noise wie hoch die Lautstärke im {Location} ist
 Noise wie die Lautstärke im {Location} ist
@@ -47,6 +50,7 @@ Noise Lautstärke {Location}
 
 Pressure Luftdruck
 Pressure nach dem Luftdruck
+Pressure nach dem Luftdruck im {Location}
 Pressure wie viel milli bar es im {Location} hat
 Pressure wie der Luftdruck im {Location} ist
 Pressure wie hoch der Luftdruck im {Location} ist

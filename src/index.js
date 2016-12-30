@@ -3,8 +3,6 @@
  * 
  * Author: Peer David
  * Date: 23.12.2016
- * 
- * Note: To download names of companies by industry:
  */
 
 /**

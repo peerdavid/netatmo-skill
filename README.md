@@ -3,7 +3,7 @@
 This is a german amazon alexa skill, to get values from your netatmo weather stations.
 <br /><b>This is not the official version. Currently (12/2016) there exists no official skill for netatmo weather stations.</b>
 
-## HowTo use
+## HowTo use this skill
 Alexa, öffne Wetterstation<br />
 <i>Sie haben an den folgenden Orten eine Wetterstation: Wohnzimer, ... Von welchem Ort möchtest du Daten wissen?</i><br />
 Wohnzimmer<br />
@@ -17,7 +17,7 @@ Alexa, frage Wetterstation: Wie hoch ist der CO2-Wert im Wohnzimmer?<br />
 Alexa, frage Wetterstation: Wie hoch ist die Aussentemperatur?<br />
 <i>Aussen hat es 4,6 Grad.</i>
 
-## HowTo Setup
+## HowTo setup the skill and the lambda function
 1. Sign in in netatmo.
 2. Name your weather station modules and devices like the lines in SlotType.txt (or add some names to SlotType.txt)
 3. Register as a developer on netatmo.
